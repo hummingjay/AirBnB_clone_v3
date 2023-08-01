@@ -66,6 +66,22 @@ test_db_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
+    
+            def test_get_existing_object(self):
+        """Test retrieving an existing object from storage"""
+        # Create a new object and add it to the session
+        new_obj = User()
+        db_storage.DBStorage().new(new_obj)
+        db_storage.DBStorage().save()
+        # Retrieve the object by its ID and verify it's the same object
+        retrieved_obj = db_storage.DBStorage().get(User, new_obj.id)
+        self.assertEqual(new_obj, retrieved_obj)
+    
+    def test_get_non_existing_object(self):
+        """Test retrieving a non-existing object from storage"""
+        # Try to retrieve an object with an invalid ID
+        retrieved_obj = db_storage.DBStorage().get(User, "invalid_id")
+        self.assertIsNone(retrieved_obj)
 
 
 class TestFileStorage(unittest.TestCase):
